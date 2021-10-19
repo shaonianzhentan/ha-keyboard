@@ -1,0 +1,100 @@
+import keyboard, json, time, yaml, os, hashlib, uuid
+import paho.mqtt.client as mqtt
+
+def get_mac_address(): 
+    mac=uuid.UUID(int = uuid.getnode()).hex[-12:] 
+    return ":".join([mac[e:e+2] for e in range(0,11,2)])
+
+# MD5加密
+def md5(data):
+    return hashlib.md5(data.encode(encoding='UTF-8')).hexdigest()
+
+discovery_topic = "homeassistant/status"
+
+# 获取yaml文件数据
+current_path = os.path.abspath(".")
+yaml_path = os.path.join(current_path, "kb.yaml")
+def getConfig():
+    file = open(yaml_path, 'r', encoding="utf-8")
+    file_data = file.read()
+    file.close()
+    data = yaml.full_load(file_data)
+    return data
+
+class HaKeyboard():
+
+    def __init__(self):
+        # 按键记录
+        self.key_record = {}
+        self.config = getConfig()
+        client_id = "ha_keyboard"
+        config_mqtt = self.config['mqtt']
+        HOST = config_mqtt.get('host', 'localhost')
+        PORT = config_mqtt.get('port', 1883)
+        USERNAME = config_mqtt.get('user', '')
+        PASSWORD = config_mqtt.get('password', '')
+
+        client = mqtt.Client(client_id)
+        self.client = client
+        client.username_pw_set(USERNAME, PASSWORD)
+        client.on_connect = self.on_connect
+        client.on_message = self.on_message
+        client.on_subscribe = self.on_subscribe
+        client.on_disconnect = self.on_disconnect
+        client.connect(HOST, PORT, 60)
+        client.loop_forever()
+
+    def on_connect(self, client, userdata, flags, rc):
+        client.subscribe(discovery_topic)
+        keyboard.on_release(self.on_release)
+
+    def on_message(self, client, userdata, msg):
+        payload = str(msg.payload.decode('utf-8'))
+        # 自动发现配置
+        if msg.topic == discovery_topic and payload == 'online':
+            self.key_record = {}
+
+    def on_subscribe(self, client, userdata, mid, granted_qos):
+        print("On Subscribed: qos = %d" % granted_qos)
+
+    def on_disconnect(self, client, userdata, rc):
+        print("Unexpected disconnection %s" % rc)
+
+    def get_unique_id(self, name, action):
+        return md5(f'ha_keyboard-{name}{action}')
+
+    # 自动配置
+    def discover(self, name, action):
+        unique_id = self.get_unique_id(name, action)
+        param = {
+            "automation_type": "trigger",
+            "topic": f"ha_keyboard/{unique_id}",
+            "type": action,
+            "subtype": name,
+            "device":{
+                "name": "键盘控制",
+                "identifiers": [ f'ha-keyboard-{get_mac_address()}' ],
+                "model": "ha-keyboard",
+                "sw_version": "1.0",
+                "manufacturer":"shaonianzhentan"
+            },
+        }
+        self.client.publish(f"homeassistant/device_automation/{unique_id}/config", payload=json.dumps(param), qos=0)
+
+    def publish(self, name, action):
+        unique_id = self.get_unique_id(name, action)
+        self.client.publish(f"ha_keyboard/{unique_id}", payload='', qos=0)
+
+    def on_release(self, ev):
+        key = f'{ev.name}{ev.scan_code}'
+        key_record = self.key_record.get(key)
+        name = f'键码 {ev.scan_code}'
+        action = f'键名 {ev.name}'
+        # 初次按键
+        if key_record is None:
+            self.discover(name, action)
+            self.key_record[key] = True
+        
+        self.publish(name, action)
+
+HaKeyboard()

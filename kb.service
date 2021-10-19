@@ -1,0 +1,10 @@
+[Unit]
+Description=ha-keyboard
+After=network-online.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 ~/ha-keyboard/kb.py
+
+[Install]
+WantedBy=multi-user.target
