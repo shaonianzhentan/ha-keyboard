@@ -1,9 +1,20 @@
-import keyboard, json, time, os, hashlib, uuid
+import keyboard, json, time, os, hashlib, uuid, socket
 import paho.mqtt.client as mqtt
 
 def get_mac_address(): 
     mac=uuid.UUID(int = uuid.getnode()).hex[-12:] 
     return ":".join([mac[e:e+2] for e in range(0,11,2)])
+
+def get_host_ip():
+    try:
+        s=socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8',80))
+        ip=s.getsockname()[0]
+    finally:
+        s.close()
+    return ip
+
+IP = get_host_ip()
 
 # MD5加密
 def md5(data):
@@ -76,7 +87,7 @@ class HaKeyboard():
             "device":{
                 "name": "键盘控制",
                 "identifiers": [ f'ha-keyboard-{get_mac_address()}' ],
-                "model": "ha-keyboard",
+                "model": IP,
                 "sw_version": "1.0",
                 "manufacturer":"shaonianzhentan"
             },
