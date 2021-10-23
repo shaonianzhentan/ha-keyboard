@@ -1,9 +1,13 @@
 # ha-keyboard
 键盘监听
 
-```bash
 # 安装依赖
-pip3 install pyyaml paho.mqtt keyboard
+```bash
+pip3 install pyyaml paho-mqtt keyboard
+```
+
+```bash
+pip install --upgrade setuptools
 ```
 
 启动

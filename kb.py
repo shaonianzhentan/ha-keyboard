@@ -1,4 +1,4 @@
-import keyboard, json, time, yaml, os, hashlib, uuid
+import keyboard, json, time, os, hashlib, uuid
 import paho.mqtt.client as mqtt
 
 def get_mac_address(): 
@@ -12,13 +12,15 @@ def md5(data):
 discovery_topic = "homeassistant/status"
 
 # 获取yaml文件数据
-current_path = os.path.abspath(".")
-yaml_path = os.path.join(current_path, "kb.yaml")
 def getConfig():
-    file = open(yaml_path, 'r', encoding="utf-8")
-    file_data = file.read()
-    file.close()
-    data = yaml.full_load(file_data)
+    data = {}
+    yaml_path = os.path.join(os.path.abspath("."), "kb.yaml")
+    if os.path.exists(yaml_path):
+        file = open(yaml_path, 'r', encoding="utf-8")
+        file_data = file.read()
+        file.close()
+        import yaml
+        data = yaml.full_load(file_data)
     return data
 
 class HaKeyboard():
