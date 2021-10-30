@@ -22,6 +22,8 @@ sudo nano /etc/systemd/system/ha_keyboard.service
 # 启动服务
 sudo systemctl start ha_keyboard
 
+sudo systemctl enable ha_keyboard
+
 sudo systemctl restart ha_keyboard
 
 sudo systemctl status ha_keyboard
