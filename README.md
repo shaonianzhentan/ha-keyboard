@@ -38,7 +38,8 @@ After=network-online.target
 Type=simple
 ExecStart=/usr/bin/python3 /root/git/ha-keyboard/kb.py
 WorkingDirectory=/root/git/ha-keyboard/
-Restart=on-failure
+RestartSec=15
+Restart=always
 
 [Install]
 WantedBy=multi-user.target
