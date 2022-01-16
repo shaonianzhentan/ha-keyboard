@@ -1,6 +1,10 @@
 # ha-keyboard
 键盘监听
 
+
+[![hacs_badge](https://img.shields.io/badge/Home-Assistant-%23049cdb)](https://www.home-assistant.io/)
+![visit](https://visitor-badge.glitch.me/badge?page_id=shaonianzhentan.ha-keyboard&left_text=visit)
+
 ## 安装依赖
 ```bash
 pip3 install pyyaml paho-mqtt keyboard
@@ -45,7 +49,7 @@ Restart=always
 WantedBy=multi-user.target
 ```
 
-## 日志
+## 调试
 
 ```yaml
 service: logger.set_level
@@ -58,3 +62,11 @@ service: logger.set_level
 data:
   homeassistant.components.mqtt: warn
 ```
+
+## 如果这个项目对你有帮助，请我喝杯<del style="font-size: 14px;">咖啡</del>奶茶吧😘
+|  |支付宝|微信|
+|---|---|---|
+奶茶= | <img src="https://cdn.jsdelivr.net/gh/shaonianzhentan/ha-docs@master/docs/img/alipay.png" align="left" height="160" width="160" alt="支付宝" title="支付宝">  |  <img src="https://cdn.jsdelivr.net/gh/shaonianzhentan/ha-docs@master/docs/img/wechat.png" align="left" height="160" width="160" alt="微信支付" title="微信">
+
+#### 关注我的微信订阅号，了解更多HomeAssistant相关知识
+<img src="https://cdn.jsdelivr.net/gh/shaonianzhentan/ha-docs@master/docs/img/wechat-channel.png" align="left" height="160" alt="HomeAssistant家庭助理" title="HomeAssistant家庭助理"> 
