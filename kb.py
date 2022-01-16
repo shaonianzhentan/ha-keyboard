@@ -14,7 +14,9 @@ def get_host_ip():
         s.close()
     return ip
 
+MAC = get_mac_address()
 IP = get_host_ip()
+identifiers = f'ha-keyboard-{MAC}'
 
 # MD5加密
 def md5(data):
@@ -79,24 +81,34 @@ class HaKeyboard():
     # 自动配置
     def discover(self, name, action):
         unique_id = self.get_unique_id(name, action)
+        device_info = {
+            "name": "键盘控制",
+            "configuration_url": "",
+            "identifiers": [ identifiers ],
+            "model": IP,
+            "sw_version": "1.1",
+            "manufacturer":"shaonianzhentan"
+        }
         param = {
             "automation_type": "trigger",
             "topic": f"ha_keyboard/{unique_id}",
             "type": action,
             "subtype": name,
-            "device":{
-                "name": "键盘控制",
-                "identifiers": [ f'ha-keyboard-{get_mac_address()}' ],
-                "model": IP,
-                "sw_version": "1.0",
-                "manufacturer":"shaonianzhentan"
-            },
+            "device": device_info
         }
         self.client.publish(f"homeassistant/device_automation/{unique_id}/config", payload=json.dumps(param), qos=0)
+        # 添加传感器
+        self.client.publish(f"homeassistant/sensor/{md5(identifiers)}/config", payload=json.dumps({
+            "name": device_info['name'],
+            "state_topic": f"ha_keyboard/{IP}",
+            "device": device_info
+        }), qos=0)
 
     def publish(self, name, action):
         unique_id = self.get_unique_id(name, action)
         self.client.publish(f"ha_keyboard/{unique_id}", payload='', qos=0)
+        # 更新传感器
+        self.client.publish(f"ha_keyboard/{IP}", payload=name, qos=0)
 
     def on_release(self, ev):
         key = f'{ev.name}{ev.scan_code}'
