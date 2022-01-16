@@ -98,11 +98,13 @@ class HaKeyboard():
         }
         self.client.publish(f"homeassistant/device_automation/{unique_id}/config", payload=json.dumps(param), qos=0)
         # 添加传感器
+        '''
         self.client.publish(f"homeassistant/sensor/{md5(identifiers)}/config", payload=json.dumps({
             "name": device_info['name'],
             "state_topic": f"ha_keyboard/{IP}",
             "device": device_info
         }), qos=0)
+        '''
 
     def publish(self, name, action):
         unique_id = self.get_unique_id(name, action)
