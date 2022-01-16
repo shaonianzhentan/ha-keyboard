@@ -117,9 +117,10 @@ class HaKeyboard():
         action = f'键名 {ev.name}'
         # 初次按键
         if key_record is None:
+            print('初次按键')
             self.discover(name, action)
             self.key_record[key] = True
-        
+        print(name, action)
         self.publish(name, action)
 
 HaKeyboard()
