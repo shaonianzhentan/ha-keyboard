@@ -1,7 +1,7 @@
 # ha-keyboard
 键盘监听
 
-# 安装依赖
+## 安装依赖
 ```bash
 pip3 install pyyaml paho-mqtt keyboard
 ```
@@ -43,4 +43,18 @@ Restart=always
 
 [Install]
 WantedBy=multi-user.target
+```
+
+## 日志
+
+```yaml
+service: logger.set_level
+data:
+  homeassistant.components.mqtt: debug
+```
+
+```yaml
+service: logger.set_level
+data:
+  homeassistant.components.mqtt: warn
 ```
