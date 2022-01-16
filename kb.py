@@ -49,6 +49,15 @@ class HaKeyboard():
         USERNAME = config_mqtt.get('user', '')
         PASSWORD = config_mqtt.get('password', '')
 
+        self.device_info = {
+            "name": "键盘控制",
+            "configuration_url": "https://github.com/shaonianzhentan/ha-keyboard",
+            "identifiers": [ identifiers ],
+            "model": IP,
+            "sw_version": "1.1",
+            "manufacturer":"shaonianzhentan"
+        }
+
         client = mqtt.Client(client_id)
         self.client = client
         client.username_pw_set(USERNAME, PASSWORD)
@@ -62,12 +71,14 @@ class HaKeyboard():
     def on_connect(self, client, userdata, flags, rc):
         client.subscribe(discovery_topic)
         keyboard.on_release(self.on_release)
+        self.discover_sensor()
 
     def on_message(self, client, userdata, msg):
         payload = str(msg.payload.decode('utf-8'))
         # 自动发现配置
         if msg.topic == discovery_topic and payload == 'online':
             self.key_record = {}
+            self.discover_sensor()
 
     def on_subscribe(self, client, userdata, mid, granted_qos):
         print("On Subscribed: qos = %d" % granted_qos)
@@ -81,37 +92,30 @@ class HaKeyboard():
     # 自动配置
     def discover(self, name, action):
         unique_id = self.get_unique_id(name, action)
-        device_info = {
-            "name": "键盘控制",
-            "configuration_url": "https://github.com/shaonianzhentan/ha-keyboard",
-            "identifiers": [ identifiers ],
-            "model": IP,
-            "sw_version": "1.1",
-            "manufacturer":"shaonianzhentan"
-        }
         param = {
             "automation_type": "trigger",
             "topic": f"ha_keyboard/{unique_id}",
             "type": action,
             "subtype": name,
-            "device": device_info
+            "device": self.device_info
         }
         self.client.publish(f"homeassistant/device_automation/{unique_id}/config", payload=json.dumps(param), qos=0)
+
+    def discover_sensor(self):
         # 添加传感器
-        sensor_unique_id = md5(identifiers)
-        self.client.publish(f"homeassistant/sensor/{sensor_unique_id}/config", payload=json.dumps({
-            "name": device_info['name'],
+        name = self.device_info['name']
+        unique_id = self.get_unique_id(name, '')
+        self.client.publish(f"homeassistant/sensor/{unique_id}/config", payload=json.dumps({
+            "name": name,
             "icon": "mdi:keyboard",
-            "unique_id": sensor_unique_id,
+            "unique_id": unique_id,
             "state_topic": f"ha_keyboard/{IP}",
-            "device": device_info
+            "device": self.device_info
         }), qos=0)
 
     def publish(self, name, action):
         unique_id = self.get_unique_id(name, action)
         self.client.publish(f"ha_keyboard/{unique_id}", payload='', qos=0)
-        # 更新传感器
-        self.client.publish(f"ha_keyboard/{IP}", payload=name, qos=0)
 
     def on_release(self, ev):
         key = f'{ev.name}{ev.scan_code}'
@@ -125,5 +129,7 @@ class HaKeyboard():
             self.key_record[key] = True
         print(name, action)
         self.publish(name, action)
+        # 更新传感器
+        self.client.publish(f"ha_keyboard/{IP}", payload=f'{ev.name} {ev.scan_code}', qos=0)
 
 HaKeyboard()
