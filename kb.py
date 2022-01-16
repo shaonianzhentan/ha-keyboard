@@ -83,7 +83,7 @@ class HaKeyboard():
         unique_id = self.get_unique_id(name, action)
         device_info = {
             "name": "键盘控制",
-            "configuration_url": "",
+            "configuration_url": "https://github.com/shaonianzhentan/ha-keyboard",
             "identifiers": [ identifiers ],
             "model": IP,
             "sw_version": "1.1",
