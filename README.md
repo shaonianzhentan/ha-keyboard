@@ -3,7 +3,7 @@
 
 
 [![hacs_badge](https://img.shields.io/badge/Home-Assistant-%23049cdb)](https://www.home-assistant.io/)
-![visit](https://visitor-badge.glitch.me/badge?page_id=shaonianzhentan.ha-keyboard&left_text=visit)
+![visit](https://visitor-badge.laobi.icu/badge?page_id=shaonianzhentan.ha-keyboard&left_text=visit)
 
 ## 安装依赖
 ```bash

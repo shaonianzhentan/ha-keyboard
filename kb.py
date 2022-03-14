@@ -131,10 +131,10 @@ class HaKeyboard():
         print(name, action)
         self.publish(name, action)
         # 更新传感器
-        self.client.publish(f"ha_keyboard/{IP}", payload=f'{ev.name} {ev.scan_code}', qos=0)
         self.client.publish(f"ha_keyboard/{IP}/attr", payload=json.dumps({
             "key_name": ev.name,
             "key_code": ev.scan_code
         }), qos=0)
+        self.client.publish(f"ha_keyboard/{IP}", payload=time.strftime('%H:%M:%S', time.localtime()), qos=0)
 
 HaKeyboard()
