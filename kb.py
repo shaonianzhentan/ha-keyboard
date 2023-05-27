@@ -1,4 +1,4 @@
-import keyboard, json, time, os, hashlib, uuid, socket
+import keyboard, json, time, os, hashlib, uuid, socket, sys
 import paho.mqtt.client as mqtt
 
 def get_mac_address(): 
@@ -23,6 +23,7 @@ def md5(data):
     return hashlib.md5(data.encode(encoding='UTF-8')).hexdigest()
 
 discovery_topic = "homeassistant/status"
+subscribe_topic = md5(f'{identifiers}{IP}')
 
 # 获取yaml文件数据
 def getConfig():
@@ -70,6 +71,7 @@ class HaKeyboard():
 
     def on_connect(self, client, userdata, flags, rc):
         client.subscribe(discovery_topic)
+        client.subscribe(subscribe_topic)
         keyboard.on_release(self.on_release)
         self.discover_sensor()
 
@@ -79,6 +81,13 @@ class HaKeyboard():
         if msg.topic == discovery_topic and payload == 'online':
             self.key_record = {}
             self.discover_sensor()
+        elif msg.topic == subscribe_topic:
+            # 获取当前解释器路径
+            p = sys.executable
+            # 启动新程序(解释器路径, 当前程序)
+            os.execl(p, p, *sys.argv)
+            # 关闭当前程序
+            sys.exit()
 
     def on_subscribe(self, client, userdata, mid, granted_qos):
         print("On Subscribed: qos = %d" % granted_qos)
@@ -111,6 +120,16 @@ class HaKeyboard():
             "unique_id": unique_id,
             "state_topic": f"ha_keyboard/{IP}",
             "json_attr_t": f"ha_keyboard/{IP}/attr",
+            "device": self.device_info
+        }), qos=0)
+
+        button_name = f'重启{name}服务'
+        unique_id = self.get_unique_id(button_name, '')
+        self.client.publish(f"homeassistant/button/{unique_id}/config", payload=json.dumps({
+            "name": button_name,
+            "unique_id": unique_id,
+            "command_topic": subscribe_topic,
+            "payload_press": "restart",
             "device": self.device_info
         }), qos=0)
 
