@@ -54,8 +54,8 @@ class HaKeyboard():
             "name": "键盘控制",
             "configuration_url": "https://github.com/shaonianzhentan/ha-keyboard",
             "identifiers": [ identifiers ],
-            "model": IP,
-            "sw_version": "1.1",
+            "model": MAC,
+            "sw_version": IP,
             "manufacturer":"shaonianzhentan"
         }
 
