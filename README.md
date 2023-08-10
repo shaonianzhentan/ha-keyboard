@@ -5,20 +5,24 @@
 [![hacs_badge](https://img.shields.io/badge/Home-Assistant-%23049cdb)](https://www.home-assistant.io/)
 ![visit](https://visitor-badge.laobi.icu/badge?page_id=shaonianzhentan.ha-keyboard&left_text=visit)
 
-## 安装依赖
-```bash
-pip3 install pyyaml paho-mqtt keyboard
-```
+## 安装
 
+下载源代码
+```bash
+git clone https://github.com/shaonianzhentan/ha-keyboard
+```
+安装依赖
+```bash
+pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+```
+安装失败则需要安装编译工具
 ```bash
 pip install --upgrade setuptools
 ```
-
 启动
 ```bash
 python3 ha_kb.py
 ```
-
 开机启动
 ```bash
 sudo nano /etc/systemd/system/ha_kb.service
