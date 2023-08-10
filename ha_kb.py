@@ -27,7 +27,7 @@ subscribe_topic = md5(f'{identifiers}{IP}')
 
 # 获取yaml文件数据
 def getConfig():
-    data = {}
+    data = { 'mqtt': {} }
     yaml_path = os.path.join(os.path.abspath("."), "ha_kb.yaml")
     if os.path.exists(yaml_path):
         file = open(yaml_path, 'r', encoding="utf-8")

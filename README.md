@@ -13,30 +13,27 @@ git clone https://github.com/shaonianzhentan/ha-keyboard
 ```
 安装依赖
 ```bash
-pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
+cd ha-keyboard
+
+sudo pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple/
 ```
 安装失败则需要安装编译工具
 ```bash
-pip install --upgrade setuptools
+sudo pip install --upgrade setuptools
 ```
-启动
+## 启动
 ```bash
-python3 ha_kb.py
+sudo python3 ha_kb.py
 ```
-开机启动
+
+
+## 开机启动
+
+生成系统启动文件
 ```bash
 sudo nano /etc/systemd/system/ha_kb.service
-
-# 启动服务
-sudo systemctl start ha_kb
-
-sudo systemctl enable ha_kb
-
-sudo systemctl restart ha_kb
-
-sudo systemctl status ha_kb
 ```
-
+文件内容（**WorkingDirectory需修改为对应目录**）
 ```
 [Unit]
 Description=ha-keyboard
@@ -44,13 +41,29 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 kb.py
+ExecStart=/usr/bin/python3 ha_kb.py
 WorkingDirectory=/root/git/ha-keyboard/
 RestartSec=15
 Restart=always
 
 [Install]
 WantedBy=multi-user.target
+```
+启动服务
+```bash
+sudo systemctl start ha_kb
+```
+加入开机项
+```bash
+sudo systemctl enable ha_kb
+```
+重启服务
+```bash
+sudo systemctl restart ha_kb
+```
+查看运行状态
+```bash
+sudo systemctl status ha_kb
 ```
 
 ## 调试
