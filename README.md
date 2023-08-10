@@ -16,21 +16,21 @@ pip install --upgrade setuptools
 
 启动
 ```bash
-python3 kb.py
+python3 ha_kb.py
 ```
 
 开机启动
 ```bash
-sudo nano /etc/systemd/system/ha_keyboard.service
+sudo nano /etc/systemd/system/ha_kb.service
 
 # 启动服务
-sudo systemctl start ha_keyboard
+sudo systemctl start ha_kb
 
-sudo systemctl enable ha_keyboard
+sudo systemctl enable ha_kb
 
-sudo systemctl restart ha_keyboard
+sudo systemctl restart ha_kb
 
-sudo systemctl status ha_keyboard
+sudo systemctl status ha_kb
 ```
 
 ```
@@ -40,7 +40,7 @@ After=network-online.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /root/git/ha-keyboard/kb.py
+ExecStart=/usr/bin/python3 kb.py
 WorkingDirectory=/root/git/ha-keyboard/
 RestartSec=15
 Restart=always

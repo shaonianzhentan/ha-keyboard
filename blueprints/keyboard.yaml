@@ -2,7 +2,7 @@ blueprint:
   name: 键盘控制
   description: 键盘遥控器
   domain: automation
-  source_url: https://gitee.com/shaonianzhentan/ha-keyboard/blob/main/blueprints/keyboard.yaml
+  source_url: https://github.com/shaonianzhentan/ha-keyboard/blob/main/blueprints/keyboard.yaml
   input:
     key_3:
       name: Key 3

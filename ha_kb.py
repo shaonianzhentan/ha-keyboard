@@ -28,7 +28,7 @@ subscribe_topic = md5(f'{identifiers}{IP}')
 # 获取yaml文件数据
 def getConfig():
     data = {}
-    yaml_path = os.path.join(os.path.abspath("."), "kb.yaml")
+    yaml_path = os.path.join(os.path.abspath("."), "ha_kb.yaml")
     if os.path.exists(yaml_path):
         file = open(yaml_path, 'r', encoding="utf-8")
         file_data = file.read()
@@ -151,6 +151,7 @@ class HaKeyboard():
         self.publish(name, action)
         # 更新传感器
         self.client.publish(f"ha_keyboard/{IP}/attr", payload=json.dumps({
+            'device': ev.device,
             "key_name": ev.name,
             "key_code": ev.scan_code
         }), qos=0)
