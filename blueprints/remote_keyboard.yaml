@@ -1,0 +1,240 @@
+blueprint:
+  name: 遥控键盘控制
+  description: 我的遥控器键盘
+  domain: automation
+  source_url: https://gitee.com/shaonianzhentan/ha-keyboard/blob/main/blueprints/remote_keyboard.yaml
+  input:
+    key_0:
+      name: Key 0
+      description: 上键 ↑
+      default: []
+      selector:
+        action: {}
+    key_1:
+      name: Key 1
+      description: 下键 ↓
+      default: []
+      selector:
+        action: {}
+    key_2:
+      name: Key 2
+      description: 左键 ←
+      default: []
+      selector:
+        action: {}
+    key_3:
+      name: Key 3
+      description: 右键 →
+      default: []
+      selector:
+        action: {}
+    key_4:
+      name: Key 4
+      description: Home键 🏠
+      default: []
+      selector:
+        action: {}
+    key_5:
+      name: Key 5
+      description: Menu键 ☰
+      default: []
+      selector:
+        action: {}
+    key_6:
+      name: Key 6
+      description: 按键1
+      default: []
+      selector:
+        action: {}
+    key_7:
+      name: Key 7
+      description: 按键2
+      default: []
+      selector:
+        action: {}
+    key_8:
+      name: Key 8
+      description: 按键3
+      default: []
+      selector:
+        action: {}
+    key_9:
+      name: Key 9
+      description: 按键4
+      default: []
+      selector:
+        action: {}
+    key_10:
+      name: Key 10
+      description: 按键5
+      default: []
+      selector:
+        action: {}
+    key_11:
+      name: Key 11
+      description: 按键6
+      default: []
+      selector:
+        action: {}
+    key_12:
+      name: Key 12
+      description: 按键7
+      default: []
+      selector:
+        action: {}
+    key_13:
+      name: Key 13
+      description: 按键8
+      default: []
+      selector:
+        action: {}
+    key_14:
+      name: Key 14
+      description: 按键9
+      default: []
+      selector:
+        action: {}
+    key_15:
+      name: Key 15
+      description: 按键Z
+      default: []
+      selector:
+        action: {}
+    key_16:
+      name: Key 16
+      description: 按键A
+      default: []
+      selector:
+        action: {}
+    key_17:
+      name: Key 17
+      description: 按键Q
+      default: []
+      selector:
+        action: {}
+    key_18:
+      name: Key 18
+      description: 按键X
+      default: []
+      selector:
+        action: {}
+    key_19:
+      name: Key 19
+      description: 按键S
+      default: []
+      selector:
+        action: {}
+    key_20:
+      name: Key 20
+      description: 按键W
+      default: []
+      selector:
+        action: {}
+    key_21:
+      name: Key 21
+      description: 按键C
+      default: []
+      selector:
+        action: {}
+    key_22:
+      name: Key 22
+      description: 按键D
+      default: []
+      selector:
+        action: {}
+    key_23:
+      name: Key 23
+      description: 按键E
+      default: []
+      selector:
+        action: {}
+trigger:
+- platform: state
+  entity_id: sensor.jian_pan_kong_zhi
+condition:
+  - condition: or
+    conditions:
+      - condition: state
+        entity_id: sensor.jian_pan_kong_zhi
+        attribute: device
+        state: "/dev/input/event12"
+      - condition: state
+        entity_id: sensor.jian_pan_kong_zhi
+        attribute: device
+        state: "/dev/input/event14"
+action:
+- variables:
+    command: '{{ state_attr(trigger.entity_id, "key_code") }}'
+- choose:
+  - conditions:
+    - '{{ command == 103 }}'
+    sequence: !input 'key_0'
+  - conditions:
+    - '{{ command == 108 }}'
+    sequence: !input 'key_1'
+  - conditions:
+    - '{{ command == 105 }}'
+    sequence: !input 'key_2'
+  - conditions:
+    - '{{ command == 106 }}'
+    sequence: !input 'key_3'
+  - conditions:
+    - '{{ command == 172 }}'
+    sequence: !input 'key_4'
+  - conditions:
+    - '{{ command == 127 }}'
+    sequence: !input 'key_5'
+  - conditions:
+    - '{{ command == 2 }}'
+    sequence: !input 'key_6'
+  - conditions:
+    - '{{ command == 3 }}'
+    sequence: !input 'key_7'
+  - conditions:
+    - '{{ command == 4 }}'
+    sequence: !input 'key_8'
+  - conditions:
+    - '{{ command == 5 }}'
+    sequence: !input 'key_9'
+  - conditions:
+    - '{{ command == 6 }}'
+    sequence: !input 'key_10'
+  - conditions:
+    - '{{ command == 7 }}'
+    sequence: !input 'key_11'
+  - conditions:
+    - '{{ command == 8 }}'
+    sequence: !input 'key_12'
+  - conditions:
+    - '{{ command == 9 }}'
+    sequence: !input 'key_13'
+  - conditions:
+    - '{{ command == 10 }}'
+    sequence: !input 'key_14'
+  - conditions:
+    - '{{ command == 44 }}'
+    sequence: !input 'key_15'
+  - conditions:
+    - '{{ command == 30 }}'
+    sequence: !input 'key_16'
+  - conditions:
+    - '{{ command == 16 }}'
+    sequence: !input 'key_17'
+  - conditions:
+    - '{{ command == 45 }}'
+    sequence: !input 'key_18'
+  - conditions:
+    - '{{ command == 31 }}'
+    sequence: !input 'key_19'
+  - conditions:
+    - '{{ command == 17 }}'
+    sequence: !input 'key_20'
+  - conditions:
+    - '{{ command == 46 }}'
+    sequence: !input 'key_21'
+  - conditions:
+    - '{{ command == 32 }}'
+    sequence: !input 'key_22'
+  - conditions:
+    - '{{ command == 18 }}'
+    sequence: !input 'key_23'
